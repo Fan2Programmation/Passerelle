@@ -38,10 +38,13 @@ app.get('/users', async (req, res) => {
 
 // Route pour enregistrer un utilisateur
 app.post('/register', async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body; // Récupérer le username et le password du body de la requête
   try {
-    const result = await pool.query('INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *', [email, password]);
-    res.status(201).json(result.rows[0]);  // Retourner l'utilisateur créé
+    // Insérer un nouvel utilisateur avec seulement le username et le password
+    const result = await pool.query('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *', [username, password]);
+
+    // Retourner l'utilisateur créé
+    res.status(201).json(result.rows[0]);  
   } catch (err) {
     console.error("Erreur lors de l'enregistrement", err);
     res.status(500).send("Erreur serveur");
